@@ -272,146 +272,6 @@ hearing_dementia hearing_aid
 
 
 
-********************************************************************************
-********************************************************************************
-/*                         TABLE 3A
-             HEARING IMPAIRMENT AND HEARING AID USE - 3 CATEGORIES         */
-********************************************************************************
-********************************************************************************
-
-
-*SEX ADJUSTED
-capture prog drop hearing_dementia
-program hearing_dementia
-args variable variable2
-
-*follow-up
-
-gen startfu=tdatscrn_i
-
-gen time=date_demence- startfu
-
-gen time_yr=time/365.25
-
-drop if `variable'==1
-
-replace `variable'=1 if `variable'==2
-replace `variable'=2 if `variable'==3
-
-
-. label define hearing_imp_aid_label 1 "", modify
-
-. label define hearing_imp_aid_label 1 "hearing impairment and No hearing aid", add
-
-. label define hearing_imp_aid_label 2 "", modify
-
-. label define hearing_imp_aid_label 2 "Hearing impairment and hearing aid", add
-
-. label define hearing_imp_aid_label 3 "", modify
-
-
-
-
-*We declare time and event for Cox Regression analyses
-
-stset date_demence, fail(demence) scale(365.25) entry(startfu) id(stno) origin(dateob_c)
-
-
-
-*follow up
-sum time_yr,detail
-
-
-* N cases
-tab  `variable' demence 
-
-* Rate of dementia
-stptime, by(`variable') per(1000)
-
-
-
-
-*COX model 1 
-stcox i.`variable' i.sex i.edu i.ethn_ds i.maritalstatus 
-estat phtest, detail
-
-*Cox model 2
-stcox i.`variable'  i.sex i.edu i.ethn_ds i.maritalstatus i.diet i.smoking i.alcohol pa i.bmi_cat 
-estat phtest, detail
-
-*Cox model 3
-stcox i.`variable'  i.sex i.edu i.ethn_d i.maritalstatus i.diet i.smoking i.alcohol pa i.bmi_cat number_chronicdiseases 
-estat phtest, detail
-
-
-end
-
-hearing_dementia hearing_imp_aid 
- 
-
-********************************************************************************
-********************************************************************************
-/*                         TABLE 3B
-             ASSOCIATION BETWEEN HEARING AID USE AND AND DEMENTIA
-             IN THOSE WITH HEARING IMPAIRMENT          */
-********************************************************************************
-********************************************************************************
-
-capture prog drop hearing_dementia
-program hearing_dementia
-args variable variable2 variable3
-
-
-*follow-up
-
-gen startfu=tdatscrn_i
-
-gen time=date_demence- startfu
-
-gen time_yr=time/365.25
-
-keep if `variable2'==1
-
-
-
-
-*We declare time and event for Cox Regression analyses
-
-stset date_demence, fail(demence) scale(365.25) entry(startfu) id(stno) origin(dateob_c)
-
-
-
-*follow up
-sum time_yr,detail
-
-
-* N cases
-tab  `variable' demence
-
-* Rate of dementia
-stptime, by(`variable') per(1000)
-
-
-
-*COX model 1
-stcox i.`variable' i.sex i.edu i.ethn_ds i.maritalstatus, nolog
-estat phtest, detail
-
-*Cox model 2
-stcox i.`variable'  i.sex i.edu i.ethn_ds i.maritalstatus i.diet i.smoking i.alcohol pa i.bmi_cat, nolog
-estat phtest, detail
-
-*Cox model 3
-stcox i.`variable'  i.sex i.edu i.ethn_ds i.maritalstatus i.diet i.smoking i.alcohol pa i.bmi_cat number_chronicdiseases, nolog
-estat phtest, detail
-
-
-
-
-end
-
-hearing_dementia hearing_aid hearing_impairment
-
 
 
 ********************************************************************************
@@ -490,7 +350,150 @@ hearing_dementia hearing_impairment 2
 
 ********************************************************************************
 ********************************************************************************
-/*                           TABLE S4 AND S5
+/*                         TABLE S2A
+             HEARING IMPAIRMENT AND HEARING AID USE - 3 CATEGORIES         */
+********************************************************************************
+********************************************************************************
+
+
+*SEX ADJUSTED
+capture prog drop hearing_dementia
+program hearing_dementia
+args variable variable2
+
+*follow-up
+
+gen startfu=tdatscrn_i
+
+gen time=date_demence- startfu
+
+gen time_yr=time/365.25
+
+drop if `variable'==1
+
+replace `variable'=1 if `variable'==2
+replace `variable'=2 if `variable'==3
+
+
+. label define hearing_imp_aid_label 1 "", modify
+
+. label define hearing_imp_aid_label 1 "hearing impairment and No hearing aid", add
+
+. label define hearing_imp_aid_label 2 "", modify
+
+. label define hearing_imp_aid_label 2 "Hearing impairment and hearing aid", add
+
+. label define hearing_imp_aid_label 3 "", modify
+
+
+
+
+*We declare time and event for Cox Regression analyses
+
+stset date_demence, fail(demence) scale(365.25) entry(startfu) id(stno) origin(dateob_c)
+
+
+
+*follow up
+sum time_yr,detail
+
+
+* N cases
+tab  `variable' demence 
+
+* Rate of dementia
+stptime, by(`variable') per(1000)
+
+
+
+
+*COX model 1 
+stcox i.`variable' i.sex i.edu i.ethn_ds i.maritalstatus 
+estat phtest, detail
+
+*Cox model 2
+stcox i.`variable'  i.sex i.edu i.ethn_ds i.maritalstatus i.diet i.smoking i.alcohol pa i.bmi_cat 
+estat phtest, detail
+
+*Cox model 3
+stcox i.`variable'  i.sex i.edu i.ethn_d i.maritalstatus i.diet i.smoking i.alcohol pa i.bmi_cat number_chronicdiseases 
+estat phtest, detail
+
+
+end
+
+hearing_dementia hearing_imp_aid 
+ 
+
+********************************************************************************
+********************************************************************************
+/*                         TABLE S2B
+             ASSOCIATION BETWEEN HEARING AID USE AND AND DEMENTIA
+             IN THOSE WITH HEARING IMPAIRMENT          */
+********************************************************************************
+********************************************************************************
+
+capture prog drop hearing_dementia
+program hearing_dementia
+args variable variable2 variable3
+
+
+*follow-up
+
+gen startfu=tdatscrn_i
+
+gen time=date_demence- startfu
+
+gen time_yr=time/365.25
+
+keep if `variable2'==1
+
+
+
+
+*We declare time and event for Cox Regression analyses
+
+stset date_demence, fail(demence) scale(365.25) entry(startfu) id(stno) origin(dateob_c)
+
+
+
+*follow up
+sum time_yr,detail
+
+
+* N cases
+tab  `variable' demence
+
+* Rate of dementia
+stptime, by(`variable') per(1000)
+
+
+
+*COX model 1
+stcox i.`variable' i.sex i.edu i.ethn_ds i.maritalstatus, nolog
+estat phtest, detail
+
+*Cox model 2
+stcox i.`variable'  i.sex i.edu i.ethn_ds i.maritalstatus i.diet i.smoking i.alcohol pa i.bmi_cat, nolog
+estat phtest, detail
+
+*Cox model 3
+stcox i.`variable'  i.sex i.edu i.ethn_ds i.maritalstatus i.diet i.smoking i.alcohol pa i.bmi_cat number_chronicdiseases, nolog
+estat phtest, detail
+
+
+
+
+end
+
+hearing_dementia hearing_aid hearing_impairment
+
+
+
+
+********************************************************************************
+********************************************************************************
+/*                           TABLE S5 AND S6
                       INCLUDING EARLY-ONSET DEMENTIA CASES                    */
 ********************************************************************************
 ********************************************************************************
@@ -678,7 +681,7 @@ hearing_dementia hearing_aid hearing_impairment
 
 ********************************************************************************
 ********************************************************************************
-/*                           TABLE S6, S7 and S8
+/*                           TABLE S7, S8 and S9
                         Analyses on hearing aid using IPSM                    */
 ********************************************************************************
 ********************************************************************************
@@ -1194,142 +1197,11 @@ hearing_dementia hearing_aid
 
 
 
-********************************************************************************
-********************************************************************************
-/*                               TABLE 3                                      */
-********************************************************************************
-********************************************************************************
-
-capture prog drop hearing_dementia
-program hearing_dementia
-args variable variable2
-
-*follow-up
-gen time=lenfol- screening_date
-
-gen time_yr=time/365.25
-
-replace sex=2 if sex==0
-
-drop if `variable'==1
-replace `variable'=1 if `variable'==2
-replace `variable'=2 if `variable'==3
-
-. label define hearing_imp_aid 1 "", modify
-
-. label define hearing_imp_aid 1 "hearing impairment and No hearing aid", add
-
-. label define hearing_imp_aid 2 "", modify
-
-. label define hearing_imp_aid 2 "Hearing impairment and hearing aid", add
-
-. label define hearing_imp_aid 3 "", modify
-
-*We declare time and event for Cox Regression analyses
-
-stset lenfol, fail(dementia_whiidef) scale(365.25) entry(screening_date) id(n_eid) origin(date_birth)
-
-
-
-sum age_dementia, detail
-
-
-*follow up
-sum time_yr,detail
-
-* N cases
-tab  `variable' dementia_whiidef 
-
-* Rate of dementia
-stptime, by(`variable') per(1000) 
-
-
-
-*COX model 1
-stcox i.`variable' i.sex i.edu i.ethn_ds i.livingalone, nolog
-estat phtest, detail
-
-*Cox model 2
-stcox i.`variable'  i.sex i.edu i.ethn_ds i.livingalone i.fruitveg i.smoking i.alcohol_3cat i.pa_q5 i.bmi_cat, nolog
-estat phtest, detail
-
-*Cox model 3
-stcox i.`variable'  i.sex i.edu i.ethn_ds i.livingalone i.fruitveg i.smoking i.alcohol_3cat i.pa_q5 i.bmi_cat number_chronicdiseases, nolog
-estat phtest, detail
-
-
-end
-
-hearing_dementia hearing_impairment_aid 
-
-
-
-
-************************
-/* 
-TABLE 3B
-HEARING AID USE IN THOSE WITH HEARING IMPAIRMENT
-
-*/
-************************
-
-
-
-capture prog drop hearing_dementia
-program hearing_dementia
-args variable variable2
-
-
-*follow-up
-gen time=lenfol- screening_date
-
-gen time_yr=time/365.25
-
-keep if `variable2'==1
-
-replace sex=2 if sex==0
-
-
-
-*We declare time and event for Cox Regression analyses
-
-stset lenfol, fail(dementia_whiidef) scale(365.25) entry(screening_date) id(n_eid) origin(date_birth)
-
-
-
-*follow up
-sum time_yr,detail
-
-
-* N cases
-tab  `variable' dementia_whiidef
-
-* Rate of dementia
-stptime, by(`variable') per(1000)
-
-
-
-*COX model 1
-stcox i.`variable' i.sex i.edu i.ethn_ds i.livingalone, nolog
-estat phtest, detail
-
-*Cox model 2
-stcox i.`variable'  i.sex i.edu i.ethn_ds i.livingalone i.fruitveg i.smoking i.alcohol_3cat i.pa_q5 i.bmi_cat, nolog
-estat phtest, detail
-
-*Cox model 3
-stcox i.`variable'  i.sex i.edu i.ethn_ds i.livingalone i.fruitveg i.smoking i.alcohol_3cat i.pa_q5 i.bmi_cat number_chronicdiseases, nolog
-estat phtest, detail
-
-end
-
-hearing_dementia hearing_aid hearing_impairment 
-
 
 
 ********************************************************************************
 ********************************************************************************
-/*                               TABLE 4
+/*                               TABLE 3
                 CALCULATION OF HR FOR OBJECTIVE MEASURES ALONE                */
 ********************************************************************************
 ********************************************************************************
@@ -1457,9 +1329,143 @@ hearing_dementia hearing_impairment 2
 
 
 
+
 ********************************************************************************
 ********************************************************************************
-/*                               TABLE S2         
+/*                               TABLE S2A                                      */
+********************************************************************************
+********************************************************************************
+
+capture prog drop hearing_dementia
+program hearing_dementia
+args variable variable2
+
+*follow-up
+gen time=lenfol- screening_date
+
+gen time_yr=time/365.25
+
+replace sex=2 if sex==0
+
+drop if `variable'==1
+replace `variable'=1 if `variable'==2
+replace `variable'=2 if `variable'==3
+
+. label define hearing_imp_aid 1 "", modify
+
+. label define hearing_imp_aid 1 "hearing impairment and No hearing aid", add
+
+. label define hearing_imp_aid 2 "", modify
+
+. label define hearing_imp_aid 2 "Hearing impairment and hearing aid", add
+
+. label define hearing_imp_aid 3 "", modify
+
+*We declare time and event for Cox Regression analyses
+
+stset lenfol, fail(dementia_whiidef) scale(365.25) entry(screening_date) id(n_eid) origin(date_birth)
+
+
+
+sum age_dementia, detail
+
+
+*follow up
+sum time_yr,detail
+
+* N cases
+tab  `variable' dementia_whiidef 
+
+* Rate of dementia
+stptime, by(`variable') per(1000) 
+
+
+
+*COX model 1
+stcox i.`variable' i.sex i.edu i.ethn_ds i.livingalone, nolog
+estat phtest, detail
+
+*Cox model 2
+stcox i.`variable'  i.sex i.edu i.ethn_ds i.livingalone i.fruitveg i.smoking i.alcohol_3cat i.pa_q5 i.bmi_cat, nolog
+estat phtest, detail
+
+*Cox model 3
+stcox i.`variable'  i.sex i.edu i.ethn_ds i.livingalone i.fruitveg i.smoking i.alcohol_3cat i.pa_q5 i.bmi_cat number_chronicdiseases, nolog
+estat phtest, detail
+
+
+end
+
+hearing_dementia hearing_impairment_aid 
+
+
+
+
+************************
+/* 
+TABLE S2B
+HEARING AID USE IN THOSE WITH HEARING IMPAIRMENT
+
+*/
+************************
+
+
+
+capture prog drop hearing_dementia
+program hearing_dementia
+args variable variable2
+
+
+*follow-up
+gen time=lenfol- screening_date
+
+gen time_yr=time/365.25
+
+keep if `variable2'==1
+
+replace sex=2 if sex==0
+
+
+
+*We declare time and event for Cox Regression analyses
+
+stset lenfol, fail(dementia_whiidef) scale(365.25) entry(screening_date) id(n_eid) origin(date_birth)
+
+
+
+*follow up
+sum time_yr,detail
+
+
+* N cases
+tab  `variable' dementia_whiidef
+
+* Rate of dementia
+stptime, by(`variable') per(1000)
+
+
+
+*COX model 1
+stcox i.`variable' i.sex i.edu i.ethn_ds i.livingalone, nolog
+estat phtest, detail
+
+*Cox model 2
+stcox i.`variable'  i.sex i.edu i.ethn_ds i.livingalone i.fruitveg i.smoking i.alcohol_3cat i.pa_q5 i.bmi_cat, nolog
+estat phtest, detail
+
+*Cox model 3
+stcox i.`variable'  i.sex i.edu i.ethn_ds i.livingalone i.fruitveg i.smoking i.alcohol_3cat i.pa_q5 i.bmi_cat number_chronicdiseases, nolog
+estat phtest, detail
+
+end
+
+hearing_dementia hearing_aid hearing_impairment 
+
+
+
+********************************************************************************
+********************************************************************************
+/*                               TABLE S3         
 
                             STRATIFIED ANALYSES BY FOLLOW-UP LENGTH           */
 ********************************************************************************
@@ -1868,7 +1874,7 @@ hearing_dementia hearing_aid hearing_impairment
 
 ********************************************************************************
 ********************************************************************************
-/*                               TABLE S3  
+/*                               TABLE S4  
                           OUTCOME: DEMENTIA SUBTYPES                          */
 ********************************************************************************
 ********************************************************************************
@@ -1940,7 +1946,7 @@ sum age_VD, detai
 
 ********************************************************************************
 ********************************************************************************
-/*                           TABLE S4 AND S5
+/*                           TABLE S5 AND S6
                       INCLUDING EARLY-ONSET DEMENTIA CASES                    */
 ********************************************************************************
 ********************************************************************************
@@ -2120,7 +2126,7 @@ hearing_dementia hearing_aid hearing_impairment
 
 ********************************************************************************
 ********************************************************************************
-/*                           TABLE S6, S7 and S8
+/*                           TABLE S7, S8 and S9
                         Analyses on hearing aid using IPSM                    */
 ********************************************************************************
 ********************************************************************************
@@ -2356,7 +2362,7 @@ hearing_dementia hearing_aid hearing_impairment
 
 ********************************************************************************
 ********************************************************************************
-/*                               TABLE S9         
+/*                               TABLE S10        
 
              ANALYSES ADJUSTED FOR HEARING IMPAIRMENT SEVERITY                */
 ********************************************************************************
@@ -2421,7 +2427,7 @@ hearing_dementia final_aid_inspoor
 
 ********************************************************************************
 ********************************************************************************
-/*                               TABLE S10         
+/*                               TABLE S11         
 
                               ANALYSES WITH APOE                              */
 ********************************************************************************
@@ -2544,7 +2550,7 @@ hearing_dementia2_apoe hearing_aid 1
 
 ********************************************************************************
 ********************************************************************************
-/*                         TABLE S11
+/*                         TABLE S12
              CONCORDANCE BETWEEN SELF-REPORTED AND OBJECTIVE MEASURES         */
 ********************************************************************************
 ********************************************************************************
@@ -2562,7 +2568,7 @@ kap hearing_aid hearing_inspoor
 
 ********************************************************************************
 ********************************************************************************
-/*                         TABLE S12
+/*                         TABLE S13
                          SELF-REPORTED AND OBJECTIVE MEASURES                 */
 ********************************************************************************
 ********************************************************************************
@@ -2639,7 +2645,7 @@ hearing_dementia final_aid_inspoor
 
 ********************************************************************************
 ********************************************************************************
-/*                         TABLE 4
+/*                         TABLE 3
                          META-ANALYSIS FOR PAF CALCULATION                 */
 ********************************************************************************
 ********************************************************************************
